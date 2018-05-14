@@ -1,0 +1,104 @@
+{
+  "project_info": {
+    "project_number": "446997265396",
+    "firebase_url": "https://database-fire.firebaseio.com",
+    "project_id": "database-fire",
+    "storage_bucket": "database-fire.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:446997265396:android:15bbd5cec92ae132",
+        "android_client_info": {
+          "package_name": "com.egames"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "446997265396-ht217903qcaesl262g8r2o72cdj9phg2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAEon3kDGdiog2CgYv5e7h6UgsnYSuwt6Y"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:446997265396:android:22a94aa96525a178",
+        "android_client_info": {
+          "package_name": "com.foon.scotch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "446997265396-ht217903qcaesl262g8r2o72cdj9phg2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAEon3kDGdiog2CgYv5e7h6UgsnYSuwt6Y"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:446997265396:android:d8581bad751b1b15",
+        "android_client_info": {
+          "package_name": "com.scotch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "446997265396-ht217903qcaesl262g8r2o72cdj9phg2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAEon3kDGdiog2CgYv5e7h6UgsnYSuwt6Y"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

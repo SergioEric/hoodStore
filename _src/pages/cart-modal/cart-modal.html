@@ -1,0 +1,60 @@
+<ion-header>
+
+  <ion-navbar color="primary">
+  	<ion-grid>
+	    <ion-row>
+	  	<ion-col  col-8>
+    		<ion-title>..agregar al carrito</ion-title>
+  		</ion-col>
+			<ion-col col-2>
+	    	<!-- <button ion-button  icon-only (click)="dismiss()"> -->
+	      <ion-icon name='close' (click)="dismiss()" class="white"></ion-icon>
+	    <!-- </button> -->
+			</ion-col>
+
+    	</ion-row>
+  	</ion-grid>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+	<ion-card *ngFor="let p of cartList">
+		<img [src]="p.product_image"/>
+		<p></p>
+	  <ion-card-content>
+	    <ion-card-title>
+	      {{ p.product_name }}
+      </ion-card-title>
+	    <p>
+	      {{ p.product_description }}
+	    </p>
+	  </ion-card-content>
+      <ion-row no-padding>
+      <ion-col>
+        <button ion-button clear small color="danger" icon-start>
+          <ion-icon name='logo-usd'></ion-icon>
+          {{ p.product_cost }}
+        </button>
+      </ion-col>
+      <ion-col text-right>
+        <button ion-button clear small color="danger" icon-start>
+          <ion-icon name='share-alt'></ion-icon>
+          Share
+        </button>
+      </ion-col>
+    </ion-row>
+	</ion-card>	
+	<ion-item>
+  	<ion-range [(ngModel)]="quantity"  min="0" max="50" color="my_blue">
+    <ion-icon range-left small name="md-arrow-dropleft"></ion-icon>
+    <ion-icon range-right name="md-arrow-dropright"></ion-icon>
+	  </ion-range>
+	</ion-item>
+	<ion-item>
+	  <ion-label>..o escribe la cantidad</ion-label>
+		<ion-input type="number" placeholder="cantidad" [(ngModel)]="quantity"></ion-input>
+	</ion-item>
+		<button ion-button color="light" full (click)="dismiss()">Agregar</button>
+</ion-content>

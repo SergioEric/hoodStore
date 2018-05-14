@@ -1,0 +1,51 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <button ion-button menuToggle icon-only>
+      <ion-icon name='menu'></ion-icon>
+    </button>
+    <ion-title><!-- <img src="assets/icon/favicon.ico" alt="logo" id="logo"> -->{{displayName}}</ion-title>
+	  <ion-buttons end>
+	  	<button ion-button icon-start class="btn-txt" (click)="goToPay()">
+				<ion-icon name="ios-card"></ion-icon>	
+	  		Cart
+	  	</button>
+	  	<button ion-button icon-only>
+	  		<ion-icon name="search"></ion-icon>
+	  	</button>
+	  </ion-buttons>
+  </ion-navbar>
+</ion-header>
+<ion-content  class="card-background-page">
+	<ion-searchbar (ionInput)="getItems($event)" *ngIf="SearchBar == true" (click)="showSearchBar()"></ion-searchbar>
+<!-- 	<div *ngFor="let item of items | async">
+    <h1>{{ item.product_name}}</h1>
+    <p>{{ item.product_cost}}</p>
+    <p>{{ item.id}}</p>
+		<img [src]="item.product_image" />
+	</div>	 -->
+<!-- 	<ul>
+    <li *ngFor="let shirt of shirts | async">
+      {{ shirt.product_name }} - {{ shirt.product_cost }}
+      {{ shirt.id }}
+    </li>
+  </ul> -->
+  <div *ngFor="let p of products | async">
+	  <ion-card class="card-wrapper">
+		  <div class="image_container">
+		  	<img [src]="p.product_image" class="tinted" />
+		  </div>
+			<!-- <div class="card-text"> -->
+		   	<div class="card-title">{{ p.product_name }}</div>
+		    <div class="card-subtitle">{{ p.product_cost }}</div>
+	    <div class="btn-icons">
+	    	<button  ion-button icon-only (click)="addToFavorites(p.id)">
+	    		<ion-icon name="ios-heart-outline" ></ion-icon>
+	    	</button>
+	    	<button  ion-button icon-only (click)="addToCar(p)">
+					<ion-icon name="ios-cart-outline"></ion-icon>
+	    	</button>
+	    </div>
+			<!-- </div> -->
+	  </ion-card>
+	</div>
+</ion-content>

@@ -1,0 +1,64 @@
+<ion-header>
+
+  <ion-navbar color="primary">
+    <button ion-button menuToggle icon-only>
+      <ion-icon name='menu'></ion-icon>
+    </button>
+    <ion-title>Account</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding >
+	<ion-list>
+	 
+ 	  <ion-item>
+	    <ion-thumbnail item-start>
+	      <img [src]="image_data_url">
+	    </ion-thumbnail>
+	    <h2>{{username}}</h2>
+	    <p>Si falta la diplomacia, recurrid a la mujer</p>
+	    <!-- <button ion-button clear item-end> $ {{item.p.product_cost}}</button> -->
+	  </ion-item>
+<!-- 	<div class="container center">
+	<ion-grid>
+	  <ion-row>
+	    <ion-col col-12>{{username}}</ion-col>
+	  </ion-row>
+	  <ion-row>
+	    <ion-col col-6>This column will take 6 columns</ion-col>
+	  </ion-row>
+	</ion-grid >
+	<figure>
+		<img [src]="image_data_url" class="user-photo">
+	</figure>
+</div> -->
+
+	<ion-item>
+		<p>edit</p>
+		<ion-icon name="md-create" class="icon" (click)="onClickEditInfo()"></ion-icon>
+	</ion-item>
+	<ion-grid *ngIf="showEdit == true" class="center">
+
+		<ion-row >
+			<!-- <ion-label fixed >User to Display</ion-label> -->
+			<ion-input type="text" name="username" placeholder="user to display here..." [(ngModel)]="name" ></ion-input>
+		</ion-row>
+		<ion-row>
+  		<ion-icon name="md-camera"  (click)="takePhoto()"></ion-icon>
+		</ion-row>
+		<ion-row>
+						<ion-label fixed>Toma una foto</ion-label>
+		</ion-row>
+		<ion-row>
+			<button ion-button outline fixed color="my_blue" (click)="changeInfo()">Cambiar</button>
+		</ion-row>
+	</ion-grid>
+	<button ion-button color="light" full (click)="logout()">log out</button>
+	</ion-list>
+</ion-content>
+<!-- <ion-footer>
+	logout
+</ion-footer>
+ -->

@@ -1,0 +1,45 @@
+<!--
+  Generated template for the DashPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar color="primary">
+    <button ion-button menuToggle icon-only>
+      <ion-icon name='menu'></ion-icon>
+    </button>
+    <ion-title>Subir Producto</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+	<ion-list>
+	<ion-item>
+		<ion-label color="primary">Nombre:</ion-label>
+		<ion-input placeholder="product name" type="text" [(ngModel)]="product_name"></ion-input>
+	</ion-item>
+	<ion-item>
+		<ion-label color="primary">Precio:</ion-label>
+		<ion-input placeholder="cost" type="number" [(ngModel)]="product_cost"></ion-input>
+	</ion-item>
+	<ion-item>
+		<ion-label color="primary">Descripcion:</ion-label>
+		<ion-input placeholder="description" type="text" [(ngModel)]="product_description"></ion-input>
+	</ion-item>
+
+	<ion-item>
+			<input type="file" (change)="uploadFile($event)" />
+			<p>o puedes tomar una foto</p>
+			<div>{{ uploadPercent | async }}</div>
+			<button ion-button color="secondary" outline (click)="takePhoto()">Tomar Foto</button>
+	</ion-item>
+	<button (click)="submitProduct()" ion-button full color="primary">Subir</button>
+</ion-list>
+	<a [href]="downloadURL | async">{{ downloadURL | async }}</a>
+<!-- <img [src]="imageURL | async" /> -->
+
+</ion-content>
