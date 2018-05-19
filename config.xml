@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="com.foon.scotch" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>Marketio</name>
+    <name>Cuaderno Virtual</name>
     <description>IONIC 4 and AngularFire2, uploading products with your camera</description>
     <author email="sericmorales@gmail.com" href="m.me/S3rgioEric">Sergio Eric</author>
-    <content src="index.html" />
+    <content original-src="index.html" src="http://192.168.1.7:8100" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
@@ -90,5 +90,8 @@
     <plugin name="cordova-sqlite-storage" spec="^2.3.1" />
     <allow-navigation href="http://192.168.1.2:8100" />
     <allow-navigation href="http://192.168.1.1:8100" />
+    <plugin name="cordova-plugin-dialogs" spec="^2.0.1" />
+    <plugin name="cordova-plugin-x-toast" spec="^2.6.2" />
+    <plugin name="mx.ferreyra.callnumber" spec="~0.0.2" />
     <engine name="android" spec="7.0.0" />
 </widget>

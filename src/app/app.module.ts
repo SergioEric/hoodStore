@@ -8,14 +8,21 @@ import { ClientPage } from '../pages/clients/clients';
 import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
 import { CreditPage } from '../pages/credit/credit';
+import { DetailCreditPage } from '../pages/detail-credit/detail-credit'
+import { DetailClientPage } from '../pages/detail-client/detail-client'
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { AngularFireModule } from 'angularfire2'
-import { AngularFireDatabaseModule } from 'angularfire2/database'
 
-import {AngularFireDatabase} from 'angularfire2/database'
+import {AngularFireDatabase,AngularFireDatabaseModule} from 'angularfire2/database'
+// native plugins
+import { Dialogs } from '@ionic-native/dialogs';
+import { Toast } from '@ionic-native/toast';
+import { CallNumber } from '@ionic-native/call-number';
+
+
 
 const config = {
   apiKey: "AIzaSyBdTfPhNExNeNCOrcoJs2plOPqsZQ_OLrc",
@@ -33,7 +40,9 @@ const config = {
     ClientPage,
     HomePage,
     TabsPage,
-    CreditPage
+    CreditPage,
+    DetailCreditPage,
+    DetailClientPage
   ],
   imports: [
     BrowserModule,
@@ -47,12 +56,18 @@ const config = {
     ClientPage,
     HomePage,
     TabsPage,
-    CreditPage
+    CreditPage,
+    DetailCreditPage,
+    DetailClientPage
   ],
   providers: [
     StatusBar,
     SplashScreen,
     AngularFireDatabase,
+    AngularFireDatabaseModule,
+    Dialogs,
+    Toast,
+    CallNumber,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

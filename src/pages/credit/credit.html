@@ -14,28 +14,45 @@
 
 
 <ion-content padding>
-  <ion-input large type="number" placeholder="todo.." [(ngModel)]="textTodo"></ion-input>
+  <ion-input large type="number" placeholder="valor.." [(ngModel)]="amount"></ion-input>
   <button ion-button full (tap)="addTodo()">Subir</button>
-<ion-list>
 	<p>TOTAL : {{total}}</p>
+
+<!--     <ion-card>
+      <ion-card-header>
+        Bar Chart
+      </ion-card-header>
+      <ion-card-content>
+        <canvas #barCanvas></canvas>
+      </ion-card-content>
+    </ion-card> -->
+ 
+<ion-list>
     <ion-item class="text" *ngFor="let item of items | async">
       <ion-grid>
     		<ion-row>
-    			<ion-col col-4>
-    				<div *ngIf="item.through == true">
+    			<ion-col col-3>
+    				<div *ngIf="item.through == true; else noDecoration">
     					<p class="through">$ {{addCommas(item.value)}}</p>
     				</div>
-    				<div *ngIf="item.through == false">
+    				<!-- <div *ngIf="item.through == false">
 	    				$ {{addCommas(item.value)}}
-    				</div>
+    				</div> -->
+            <ng-template #noDecoration>
+              $ {{addCommas(item.value)}}
+            </ng-template>
     			</ion-col>
-    			<ion-col  col-4>
-      			<button ion-button (tap)="updateTodo(item.key)" outline color="secundary">Detallar</button>
+    			<ion-col  col-5>
+      			<button ion-button (tap)="updateValue(item.key)" outline color="secundary">Detalle</button>
     			</ion-col>
-    			<ion-col  col-4>
-    				<button ion-button (tap)="deleteTodo(item.key)" outline color="danger">tachar</button>
-      			<!-- {{ item.createdAt | date }} -->
+    			<ion-col  col-4 *ngIf="item.through == true; else okButtonThrough">
+    				<button ion-button [disabled]="true" (tap)="setThrough(item.key)" outline color="danger">tachar</button>
     			</ion-col>
+          <ng-template #okButtonThrough>
+            <ion-col  col-4 >
+              <button ion-button (tap)="setThrough(item.key)" outline color="danger">tachar</button>
+            </ion-col>
+          </ng-template>
   			</ion-row>	
       </ion-grid>
     </ion-item>

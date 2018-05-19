@@ -6,27 +6,30 @@ import { Observable } from 'rxjs/Observable'
 
 import { CreditPage } from '../credit/credit';
 
-import * as moment from 'moment'
+// import * as moment from 'moment'
 
 interface Client{
   name:string,
   phone:string,
   address:string
 }
+interface ClientID extends Client{
+  key:string
+}
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
 })
 export class HomePage {
-	clients: Observable<Client[]>
-  one_client:AngularFireList<Client>;
-  name:string
-  phone:string
-  address:string
+  client_list:AngularFireList<Client>;
+  clients: Observable<ClientID[]>
+  name:string;
+  phone:string;
+  address:string;
 
   constructor(public navCtrl: NavController, private afDB:AngularFireDatabase) {
-    this.one_client = afDB.list('clients')
-    this.clients = afDB.list('clients').snapshotChanges().map(actions=>{
+    this.client_list = afDB.list<Client>('clients')
+    this.clients = this.client_list.snapshotChanges().map(actions=>{
       return actions.map(action => ({key: action.key, ...action.payload.val()}));
     })
   }
