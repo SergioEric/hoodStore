@@ -10,6 +10,7 @@ import { TabsPage } from '../pages/tabs/tabs';
 import { CreditPage } from '../pages/credit/credit';
 import { DetailCreditPage } from '../pages/detail-credit/detail-credit'
 import { DetailClientPage } from '../pages/detail-client/detail-client'
+import { MonthsListPage } from '../pages/months-list/months-list'
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -42,7 +43,8 @@ const config = {
     TabsPage,
     CreditPage,
     DetailCreditPage,
-    DetailClientPage
+    DetailClientPage,
+    MonthsListPage
   ],
   imports: [
     BrowserModule,
@@ -58,7 +60,8 @@ const config = {
     TabsPage,
     CreditPage,
     DetailCreditPage,
-    DetailClientPage
+    DetailClientPage,
+    MonthsListPage
   ],
   providers: [
     StatusBar,

@@ -1,4 +1,15 @@
-
+ion-header{
+  .btn-txt ion-icon{
+    margin-right:7px;
+    color:color($colors,white)
+  }
+  .btn-txt ion-label{
+  	color:color($colors,white)
+  }
+  .btn-txt{
+    background-color:color($colors, danger)
+  }
+}
 .through{
 	text-decoration: line-through;
 	color: color($colors,purple)

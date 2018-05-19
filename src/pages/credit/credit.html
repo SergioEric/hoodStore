@@ -6,8 +6,14 @@
 -->
 <ion-header>
 
-  <ion-navbar>
+  <ion-navbar >
     <ion-title>credit</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-start class="btn-txt" (click)="viewMonths()">
+        <ion-icon name="calendar"></ion-icon> 
+        <ion-label color="white">Meses</ion-label>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 
 </ion-header>
@@ -43,7 +49,7 @@
             </ng-template>
     			</ion-col>
     			<ion-col  col-5>
-      			<button ion-button (tap)="updateValue(item.key)" outline color="secundary">Detalle</button>
+      			<button ion-button (tap)="detailOfValue(item.key)" outline color="secundary">Detalle</button>
     			</ion-col>
     			<ion-col  col-4 *ngIf="item.through == true; else okButtonThrough">
     				<button ion-button [disabled]="true" (tap)="setThrough(item.key)" outline color="danger">tachar</button>

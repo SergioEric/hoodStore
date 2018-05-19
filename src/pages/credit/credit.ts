@@ -11,6 +11,7 @@ import * as moment from 'moment'
 import { Chart } from 'chart.js';
 
 import {DetailCreditPage} from '../detail-credit/detail-credit'
+import { MonthsListPage } from '../months-list/months-list'
 
 
 interface Item{
@@ -36,6 +37,7 @@ export class CreditPage {
   month:string;
 
   client_id:string;
+  month_param=[false,''];//si viene por parametro, el valor
 
 	@ViewChild('barCanvas') barCanvas;
   @ViewChild('doughnutCanvas') doughnutCanvas;
@@ -54,8 +56,16 @@ export class CreditPage {
   	this.month = moment().format("MMM Do YY").split(' ')[0]
 
   	this.client_id = navParams.get('client_id')
+    let month = navParams.get('month')
+    if(month){
+      console.log(`Mes vino por params: ${month}`);
+      this.month_param[0]= true;
+      this.month_param[1]= month;
+      this.client_list = afDB.list(`precios/${this.client_id}/${month}`)
+    }else{
+    	this.client_list = afDB.list(`precios/${this.client_id}/${this.month}`)
+    }
 
-  	this.client_list = afDB.list(`precios/${this.client_id}/${this.month}`)
     // let aux = 0; 
     this.items = this.client_list.snapshotChanges().map(actions => {
       this.aux =0;
@@ -63,8 +73,6 @@ export class CreditPage {
       return actions.map(action => {
         if(action.payload.val().through == false){ // si no estan tachados
           this.aux += action.payload.val().value;
-          // console.log(`ACTION :${JSON.stringify(action.payload.val())}` );
-          // list_aux.push(JSON.stringify(action.payload.val()))
           this.list_aux.push(action.payload.val().value)
         }
         this.pure_list = this.list_aux;
@@ -75,7 +83,6 @@ export class CreditPage {
           key: action.key, ...action.payload.val()
         }
       });
-      /**/
 
     })
   } //({ key: action.key, ...action.payload.val() })
@@ -93,10 +100,15 @@ export class CreditPage {
       this.toast.show(`Agregado`, '2000', 'center').subscribe();
     })
 	}
-  updateValue(key):void{
+  detailOfValue(key):void{
     // const num = 0
     // this.afDB.object(`precios/${this.client_id}/${this.month}/${key}`).update({value:num})
-    let one_credit = this.afDB.object(`precios/${this.client_id}/${this.month}/${key}`)
+    let one_credit;
+    if(this.month_param[0]){
+      one_credit = this.afDB.object(`precios/${this.client_id}/${this.month_param[1]}/${key}`)
+    }else{
+      one_credit = this.afDB.object(`precios/${this.client_id}/${this.month}/${key}`)
+    }
 
     this.navCtrl.push(DetailCreditPage,{data:one_credit})
   }
@@ -114,6 +126,9 @@ export class CreditPage {
     }).catch(error=>{
       console.log(error)
     })
+  }
+  viewMonths(){
+    this.navCtrl.push(MonthsListPage,{id:this.client_id})
   }
   addCommas(nStr) {
     nStr += '';
