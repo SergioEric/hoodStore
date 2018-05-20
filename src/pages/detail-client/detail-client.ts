@@ -22,9 +22,9 @@ export class DetailClientPage {
   	let snap_client = navParams.get('client')
   	snap_client.snapshotChanges().subscribe(action=>{
   		this.client_obj = {
-					name : action.payload.val().name,
-					phone : action.payload.val().phone,
-					address : action.payload.val().address,
+					name : action.payload.data().name,
+					phone : action.payload.data().phone,
+					address : action.payload.data().address,
   		}
   	})
   }

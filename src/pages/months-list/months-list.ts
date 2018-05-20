@@ -2,14 +2,18 @@ import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 
 
-import {AngularFireDatabase,AngularFireList} from 'angularfire2/database'
+// import {AngularFireDatabase,AngularFireList} from 'angularfire2/database'
+import { AngularFirestore, AngularFirestoreCollection,AngularFirestoreDocument } from 'angularfire2/firestore';
+
 import { Observable } from 'rxjs/Observable'
+import { map } from 'rxjs/operators';
 
 import { CreditPage } from '../credit/credit'
 
 interface Months{
   key:string,
-  payload:Function
+  payload:Function,
+  query:Function
 }
 
 @Component({
@@ -17,29 +21,29 @@ interface Months{
   templateUrl: 'months-list.html',
 })
 export class MonthsListPage {
-  months_list:AngularFireList<Months>
-	items:Observable<any[]>;
+  months_list:AngularFirestoreDocument<Months>;
+	items=[]//:Observable<any[]>;
 
   client_id:string;
+  list_aux:any=[]
 
   constructor(
   	public navCtrl: NavController,
   	public navParams: NavParams,
-  	private afDB: AngularFireDatabase,
+  	private afs: AngularFirestore
   	) {
 
   	this.client_id = navParams.get('id')
-    this.months_list = afDB.list(`precios/${this.client_id}`)
-  	this.items = this.months_list.snapshotChanges().map(snapShots=>{
-      //lista dentro de la referencia
-  		return snapShots.map(doc=>{
-        //para cada documento dentro la lista
-        return {
-          key: doc.key, ...doc.payload.val()
-        }
-  		})
-
-  	})
+    this.months_list = afs.doc(`precios/${this.client_id}`)
+  	this.months_list.snapshotChanges().subscribe(actions=>{
+      this.list_aux = []
+      if(actions.payload.exists){
+        actions.payload.data().ArrayOfMonth.map((value)=>{
+          this.list_aux.push(value)
+          this.items = this.list_aux
+        })
+      }
+    })
   }
   gotoCredit(key):void{
     this.navCtrl.setRoot(CreditPage,{

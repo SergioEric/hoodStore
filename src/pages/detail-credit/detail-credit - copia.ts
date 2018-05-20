@@ -1,8 +1,12 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 
-// import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
-
+/**
+ * Generated class for the DetailCreditPage page.
+ *
+ * See https://ionicframework.com/docs/components/#navigation for more info on
+ * Ionic pages and navigation.
+ */
 
 @Component({
   selector: 'page-detail-credit',
@@ -19,13 +23,13 @@ export class DetailCreditPage {
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   	let value = navParams.get('data')
   	value.snapshotChanges().subscribe(action => {
-		  // console.log(action.type);
-		  // console.log(action.key)
-		  // console.log(action.payload.doc.data())
+		  console.log(action.type);
+		  console.log(action.key)
+		  console.log(action.payload.val())
 		  this.one_value = {
-		  	value:action.payload.data().value,
-  			createdAt:action.payload.data().createdAt,
-      	through:action.payload.data().through
+		  	value:action.payload.val().value,
+  			createdAt:action.payload.val().createdAt,
+      	through:action.payload.val().through
     	}
 		});
   	// this.one_value  = value;

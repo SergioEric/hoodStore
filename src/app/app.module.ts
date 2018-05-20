@@ -23,7 +23,7 @@ import { Dialogs } from '@ionic-native/dialogs';
 import { Toast } from '@ionic-native/toast';
 import { CallNumber } from '@ionic-native/call-number';
 
-
+import { AngularFirestoreModule } from 'angularfire2/firestore';
 
 const config = {
   apiKey: "AIzaSyBdTfPhNExNeNCOrcoJs2plOPqsZQ_OLrc",
@@ -49,7 +49,8 @@ const config = {
   imports: [
     BrowserModule,
     AngularFireModule.initializeApp(config),
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp),
+    AngularFirestoreModule.enablePersistence()
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -68,6 +69,7 @@ const config = {
     SplashScreen,
     AngularFireDatabase,
     AngularFireDatabaseModule,
+    AngularFirestoreModule,
     Dialogs,
     Toast,
     CallNumber,

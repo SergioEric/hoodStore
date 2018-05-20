@@ -3,9 +3,7 @@ import { NavController, NavParams } from 'ionic-angular';
 import { Dialogs } from '@ionic-native/dialogs';
 import { Toast } from '@ionic-native/toast';
 
-// import {AngularFireDatabase,AngularFireList} from 'angularfire2/database'
-import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
-
+import {AngularFireDatabase,AngularFireList} from 'angularfire2/database'
 import { Observable } from 'rxjs/Observable'
 
 import * as moment from 'moment'
@@ -21,9 +19,6 @@ interface Item{
   createdAt:string,
   through:boolean
 }
-interface ItemId extends Item{
-  key:string
-}
 
 @Component({
   selector: 'page-credit',
@@ -31,11 +26,8 @@ interface ItemId extends Item{
 })
 export class CreditPage {
 
-	items: Observable<ItemId[]>;
-
-	// client_list:AngularFireList<Item>;//database
-	itemsCollection: AngularFirestoreCollection<Item>;
-
+	items: Observable<any[]>;
+	client_list:AngularFireList<Item>;
 	amount:string='';
   total:Observable<any>;
   aux:any=0;
@@ -57,9 +49,9 @@ export class CreditPage {
 
   constructor(public navCtrl: NavController,
   	public navParams:NavParams,
+  	private afDB: AngularFireDatabase,
     public dialogs: Dialogs,
     private toast: Toast,
-    private afs: AngularFirestore
     ) {
 
     this.month = moment().format("MMM Do YY").split(' ')[0]
@@ -71,30 +63,26 @@ export class CreditPage {
       console.log(`Mes vino por params: ${month}`);
       this.month_param[0]= true;
       this.month_param[1]= month;
-      // this.client_list = afDB.list(`precios/${this.client_id}/${month}`)
-      this.itemsCollection = afs.collection<Item>('precios').doc(this.client_id).collection(month);
+      this.client_list = afDB.list(`precios/${this.client_id}/${month}`)
     }else{
-    	// this.client_list = afDB.list(`precios/${this.client_id}/${this.month}`)
-      this.itemsCollection = afs.collection<Item>('precios').doc(this.client_id).collection(this.month);
+    	this.client_list = afDB.list(`precios/${this.client_id}/${this.month}`)
     }
 
     // let aux = 0; 
-    this.items = this.itemsCollection.snapshotChanges().map(
-
-      actions => {
+    this.items = this.client_list.snapshotChanges().map(actions => {
       this.aux =0;
       this.list_aux = []
       return actions.map(action => {
-        if(action.payload.doc.data().through == false){ // si no estan tachados
-          this.aux += action.payload.doc.data().value;
-          this.list_aux.push(action.payload.doc.data().value)
+        if(action.payload.val().through == false){ // si no estan tachados
+          this.aux += action.payload.val().value;
+          this.list_aux.push(action.payload.val().value)
         }
         this.pure_list = this.list_aux;
         this.total = this.aux;
         console.log(this.list_aux);
         // this.renderChart()
         return {
-          key: action.payload.doc.id, ...action.payload.doc.data() as Item
+          key: action.key, ...action.payload.val()
         }
       });
 
@@ -105,64 +93,23 @@ export class CreditPage {
     if(this.amount.trim().toString() === "") return;
     const number = new Number(this.amount).valueOf()
     let dt = moment().format()
-
-    //for firestore
-    const id = this.afs.createId();
-    // const item: Item = { id, name };
-    this.afs.doc(`precios/${this.client_id}`).snapshotChanges().subscribe(actions=>{
-      // if(actions.payload.data().ArrayOfMonth)
-      let exist = false;
-      let aux_moths=[];
-      if(actions.payload.exists){
-
-        aux_moths = actions.payload.data().ArrayOfMonth
-        actions.payload.data().ArrayOfMonth.map((v)=>{ 
-          if(v==this.month){
-            //si ya esta el campo en la db
-            exist=true;
-            console.log(`El campo con la fecha ${this.month} existe`);
-           }
-        })
-      }else{
-        //por primera vez, cuando se agrega el primer valor del mes
-        console.log('primer valor agregado en la lista del mes');
-        this.afs.doc(`precios/${this.client_id}`).set({ArrayOfMonth:aux_moths})
-      }
-      if(!exist){// si no existe el mes actual en la ref
-        aux_moths.push(this.month)
-        this.afs.doc(`precios/${this.client_id}`).update({ArrayOfMonth:aux_moths})
-      }
-      // debugger
-    })
-    this.itemsCollection.doc(id).set({
-      value:number,
-      createdAt:dt,
-      through:false
-    }).then(()=>{
-        this.amount = '' // limpiamos el campo
-        this.toast.show(`Agregado`, '2000', 'center').subscribe();
-
-    })
-
-  	/*this.client_list.push({
+  	this.client_list.push({
       value:number,
       createdAt:dt,
       through:false
     }).then(()=>{
       this.amount = '' // limpiamos el campo
       this.toast.show(`Agregado`, '2000', 'center').subscribe();
-    })*/
+    })
 	}
   detailOfValue(key):void{
+    // const num = 0
+    // this.afDB.object(`precios/${this.client_id}/${this.month}/${key}`).update({value:num})
     let one_credit;
     if(this.month_param[0]){
-        one_credit = this.afs.doc(`precios/${this.client_id}/${this.month_param[1]}/${key}`)
-      // one_credit = this.afDB.object(`precios/${this.client_id}/${this.month_param[1]}/${key}`)
-      //for firestore
-      // one_credit = this.afs.collection(`precios`).doc(this.client_id).collection(this.month_param[1].toString()).doc(key)
+      one_credit = this.afDB.object(`precios/${this.client_id}/${this.month_param[1]}/${key}`)
     }else{
-      one_credit = this.afs.doc(`precios/${this.client_id}/${this.month}/${key}`)
-      // one_credit = this.afs.collection(`precios`).doc(this.client_id).collection(this.month).doc(key)
+      one_credit = this.afDB.object(`precios/${this.client_id}/${this.month}/${key}`)
     }
 
     this.navCtrl.push(DetailCreditPage,{data:one_credit})
@@ -171,21 +118,12 @@ export class CreditPage {
     // this.afDB.object(`precios/${key}`).remove()
     this.dialogs.confirm("Seguro que quieres tachar este valor?","Jefe",['Confirmar', 'Cancelar']).then((index)=>{
       if(index===1){
-        if(this.month_param[0]){//por navparam
-          this.afs.collection(`precios`).doc(this.client_id).collection(this.month_param[1].toString()).doc(key).update({through:true}).then(()=>{
-             //se agrego a la base de datos
-             this.toast.show(`Se ha tachado`, '2000', 'center').subscribe();
-         }).catch(error=>{
-             alert(error)
-         });
-        }else{
-          this.afs.collection(`precios`).doc(this.client_id).collection(this.month).doc(key).update({through:true}).then(()=>{
-             //se agrego a la base de datos
-             this.toast.show(`Se ha tachado`, '2000', 'center').subscribe();
-           }).catch(error=>{
-               alert(error)
-         });
-       }
+       this.afDB.object(`precios/${this.client_id}/${this.month}/${key}`).update({through:true}).then(()=>{
+         //se agrego a la base de datos
+         this.toast.show(`Se ha tachado`, '2000', 'center').subscribe();
+       }).catch(error=>{
+         alert(error)
+       })
       }
     }).catch(error=>{
       console.log(error)
