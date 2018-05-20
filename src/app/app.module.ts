@@ -8,16 +8,17 @@ import { ClientPage } from '../pages/clients/clients';
 import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
 import { CreditPage } from '../pages/credit/credit';
-import { DetailCreditPage } from '../pages/detail-credit/detail-credit'
-import { DetailClientPage } from '../pages/detail-client/detail-client'
-import { MonthsListPage } from '../pages/months-list/months-list'
+import { DetailCreditPage } from '../pages/detail-credit/detail-credit';
+import { DetailClientPage } from '../pages/detail-client/detail-client';
+import { MonthsListPage } from '../pages/months-list/months-list';
+import { MonthStatePage } from '../pages/month-state/month-state';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
-import { AngularFireModule } from 'angularfire2'
+import { AngularFireModule } from 'angularfire2';
 
-import {AngularFireDatabase,AngularFireDatabaseModule} from 'angularfire2/database'
+import {AngularFireDatabase,AngularFireDatabaseModule} from 'angularfire2/database';
 // native plugins
 import { Dialogs } from '@ionic-native/dialogs';
 import { Toast } from '@ionic-native/toast';
@@ -44,7 +45,8 @@ const config = {
     CreditPage,
     DetailCreditPage,
     DetailClientPage,
-    MonthsListPage
+    MonthsListPage,
+    MonthStatePage
   ],
   imports: [
     BrowserModule,
@@ -62,7 +64,8 @@ const config = {
     CreditPage,
     DetailCreditPage,
     DetailClientPage,
-    MonthsListPage
+    MonthsListPage,
+    MonthStatePage
   ],
   providers: [
     StatusBar,

@@ -7,6 +7,8 @@ import { AngularFirestore, AngularFirestoreCollection,AngularFirestoreDocument }
 
 import { Observable } from 'rxjs/Observable'
 import { map } from 'rxjs/operators';
+import * as moment from 'moment'
+
 
 import { CreditPage } from '../credit/credit'
 
@@ -25,16 +27,19 @@ export class MonthsListPage {
 	items=[]//:Observable<any[]>;
 
   client_id:string;
-  list_aux:any=[]
+  list_aux:any=[];
+  year;
 
   constructor(
   	public navCtrl: NavController,
   	public navParams: NavParams,
   	private afs: AngularFirestore
   	) {
+    this.year = moment().year()
+
 
   	this.client_id = navParams.get('id')
-    this.months_list = afs.doc(`precios/${this.client_id}`)
+    this.months_list = afs.doc(`prices-${this.year}/${this.client_id}`)
   	this.months_list.snapshotChanges().subscribe(actions=>{
       this.list_aux = []
       if(actions.payload.exists){

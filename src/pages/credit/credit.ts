@@ -14,6 +14,7 @@ import { Chart } from 'chart.js';
 
 import {DetailCreditPage} from '../detail-credit/detail-credit'
 import { MonthsListPage } from '../months-list/months-list'
+import { MonthStatePage } from '../month-state/month-state'
 
 
 interface Item{
@@ -55,12 +56,15 @@ export class CreditPage {
   doughnutChart: any;
   lineChart: any;
 
+  year;//este anio
+
   constructor(public navCtrl: NavController,
   	public navParams:NavParams,
     public dialogs: Dialogs,
     private toast: Toast,
     private afs: AngularFirestore
     ) {
+    this.year = moment().year()
 
     this.month = moment().format("MMM Do YY").split(' ')[0]
 
@@ -71,11 +75,17 @@ export class CreditPage {
       console.log(`Mes vino por params: ${month}`);
       this.month_param[0]= true;
       this.month_param[1]= month;
-      // this.client_list = afDB.list(`precios/${this.client_id}/${month}`)
-      this.itemsCollection = afs.collection<Item>('precios').doc(this.client_id).collection(month);
+      // this.client_list = afDB.list(`prices-${this.year}/${this.client_id}/${month}`)
+      this.itemsCollection = afs.collection<Item>(`prices-${this.year}/${this.client_id}/${month}`, ref=>{
+        let q = ref.orderBy('createdAt',"desc")
+        return q;
+      });
     }else{
-    	// this.client_list = afDB.list(`precios/${this.client_id}/${this.month}`)
-      this.itemsCollection = afs.collection<Item>('precios').doc(this.client_id).collection(this.month);
+      // this.itemsCollection = afs.collection<Item>(`prices-${this.year}`).doc(this.client_id).collection(this.month);
+      this.itemsCollection = afs.collection<Item>(`prices-${this.year}/${this.client_id}/${this.month}`,ref=>{
+        let q = ref.orderBy('createdAt',"desc")
+        return q;
+      });
     }
 
     // let aux = 0; 
@@ -91,7 +101,7 @@ export class CreditPage {
         }
         this.pure_list = this.list_aux;
         this.total = this.aux;
-        console.log(this.list_aux);
+        console.log(action.payload.doc.id);
         // this.renderChart()
         return {
           key: action.payload.doc.id, ...action.payload.doc.data() as Item
@@ -109,11 +119,11 @@ export class CreditPage {
     //for firestore
     const id = this.afs.createId();
     // const item: Item = { id, name };
-    this.afs.doc(`precios/${this.client_id}`).snapshotChanges().subscribe(actions=>{
+    this.afs.doc(`prices-${this.year}/${this.client_id}`).snapshotChanges().subscribe(actions=>{
       // if(actions.payload.data().ArrayOfMonth)
       let exist = false;
       let aux_moths=[];
-      if(actions.payload.exists){
+      if(actions.payload.exists){//si existe documentos en la coleccion
 
         aux_moths = actions.payload.data().ArrayOfMonth
         actions.payload.data().ArrayOfMonth.map((v)=>{ 
@@ -126,11 +136,20 @@ export class CreditPage {
       }else{
         //por primera vez, cuando se agrega el primer valor del mes
         console.log('primer valor agregado en la lista del mes');
-        this.afs.doc(`precios/${this.client_id}`).set({ArrayOfMonth:aux_moths})
+        this.afs.doc(`prices-${this.year}/${this.client_id}`).set({ArrayOfMonth:aux_moths})
+        //se crea el state del mes, que inicialmente esta en false, y sin abono
+        // pay: abonar, paid: pagado
+        this.afs.doc(`prices-${this.year}/${this.client_id}/${this.month}/state`).set({
+          pay:[{
+            value:0,
+            date:dt
+          }],
+          paid:false
+        })
       }
       if(!exist){// si no existe el mes actual en la ref
         aux_moths.push(this.month)
-        this.afs.doc(`precios/${this.client_id}`).update({ArrayOfMonth:aux_moths})
+        this.afs.doc(`prices-${this.year}/${this.client_id}`).update({ArrayOfMonth:aux_moths})
       }
       // debugger
     })
@@ -156,30 +175,30 @@ export class CreditPage {
   detailOfValue(key):void{
     let one_credit;
     if(this.month_param[0]){
-        one_credit = this.afs.doc(`precios/${this.client_id}/${this.month_param[1]}/${key}`)
-      // one_credit = this.afDB.object(`precios/${this.client_id}/${this.month_param[1]}/${key}`)
+        one_credit = this.afs.doc(`prices-${this.year}/${this.client_id}/${this.month_param[1]}/${key}`)
+      // one_credit = this.afDB.object(`prices-${this.year}/${this.client_id}/${this.month_param[1]}/${key}`)
       //for firestore
-      // one_credit = this.afs.collection(`precios`).doc(this.client_id).collection(this.month_param[1].toString()).doc(key)
+      // one_credit = this.afs.collection(`prices-${this.year}`).doc(this.client_id).collection(this.month_param[1].toString()).doc(key)
     }else{
-      one_credit = this.afs.doc(`precios/${this.client_id}/${this.month}/${key}`)
-      // one_credit = this.afs.collection(`precios`).doc(this.client_id).collection(this.month).doc(key)
+      one_credit = this.afs.doc(`prices-${this.year}/${this.client_id}/${this.month}/${key}`)
+      // one_credit = this.afs.collection(`prices-${this.year}`).doc(this.client_id).collection(this.month).doc(key)
     }
 
     this.navCtrl.push(DetailCreditPage,{data:one_credit})
   }
   setThrough(key):void{
-    // this.afDB.object(`precios/${key}`).remove()
+    // this.afDB.object(`prices-${this.year}/${key}`).remove()
     this.dialogs.confirm("Seguro que quieres tachar este valor?","Jefe",['Confirmar', 'Cancelar']).then((index)=>{
       if(index===1){
         if(this.month_param[0]){//por navparam
-          this.afs.collection(`precios`).doc(this.client_id).collection(this.month_param[1].toString()).doc(key).update({through:true}).then(()=>{
+          this.afs.collection(`prices-${this.year}`).doc(this.client_id).collection(this.month_param[1].toString()).doc(key).update({through:true}).then(()=>{
              //se agrego a la base de datos
              this.toast.show(`Se ha tachado`, '2000', 'center').subscribe();
          }).catch(error=>{
              alert(error)
          });
         }else{
-          this.afs.collection(`precios`).doc(this.client_id).collection(this.month).doc(key).update({through:true}).then(()=>{
+          this.afs.collection(`prices-${this.year}`).doc(this.client_id).collection(this.month).doc(key).update({through:true}).then(()=>{
              //se agrego a la base de datos
              this.toast.show(`Se ha tachado`, '2000', 'center').subscribe();
            }).catch(error=>{
@@ -193,6 +212,17 @@ export class CreditPage {
   }
   viewMonths(){
     this.navCtrl.push(MonthsListPage,{id:this.client_id})
+  }
+  viewOrModifyState(){
+    let data;
+    let ref;
+    if(this.month_param[0]){
+      ref = `prices-${this.year}/${this.client_id}/${this.month_param[1]}/state`
+    }else{
+      ref = `prices-${this.year}/${this.client_id}/${this.month}/state`
+    }
+    data = this.afs.doc(ref)
+    this.navCtrl.push(MonthStatePage, {month:data,ref:ref,total:this.total})
   }
   addCommas(nStr) {
     nStr += '';
