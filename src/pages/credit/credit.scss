@@ -1,4 +1,4 @@
-ion-header{
+.activeExtra{
   .btn-txt ion-icon{
     margin-right:7px;
     color:color($colors,white)
@@ -6,8 +6,11 @@ ion-header{
   .btn-txt ion-label{
   	color:color($colors,white)
   }
-  .btn-txt{
+  .btn-txt-danger{
     background-color:color($colors, danger)
+  }
+  .btn-txt-green{
+    background-color:color($colors, secondary)
   }
 }
 .through{

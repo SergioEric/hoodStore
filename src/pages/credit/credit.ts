@@ -31,6 +31,7 @@ interface ItemId extends Item{
   templateUrl: 'credit.html',
 })
 export class CreditPage {
+  activeExtraButtons: boolean=false;
 
 	items: Observable<ItemId[]>;
 
@@ -268,5 +269,9 @@ export class CreditPage {
  
         });
       }
+
+  activeExtra() {
+    this.activeExtraButtons = !this.activeExtraButtons;
+  }
 }
 //https://www.djamware.com/post/598953f880aca768e4d2b12b/creating-beautiful-charts-easily-using-ionic-3-and-angular-4
