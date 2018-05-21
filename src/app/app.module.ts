@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 
-import { AboutPage } from '../pages/about/about';
+import { MovePage } from '../pages/move/move';
 import { ClientPage } from '../pages/clients/clients';
 import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
@@ -38,7 +38,7 @@ const config = {
 @NgModule({
   declarations: [
     MyApp,
-    AboutPage,
+    MovePage,
     ClientPage,
     HomePage,
     TabsPage,
@@ -57,7 +57,7 @@ const config = {
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    AboutPage,
+    MovePage,
     ClientPage,
     HomePage,
     TabsPage,
