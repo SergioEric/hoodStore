@@ -1,0 +1,68 @@
+<!--
+  Generated template for the MonthStatePage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>month-state</ion-title>
+    <ion-buttons end>
+<!--       <button ion-button icon-only (tap)="viewOrModifyState()">
+        <ion-icon name="eye"></ion-icon>
+      </button> -->
+      <button ion-button icon-start class="back-red" (click)="showPrompt()">
+        <ion-icon name="done-all"></ion-icon> 
+        <ion-label color="white">Librar mes</ion-label>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+	<ion-list>
+    <ion-list-header>
+      TOTAL MES: ${{total}}
+    </ion-list-header>
+
+    <ion-item>
+      <ion-label>Abonar</ion-label>
+      <ion-toggle [(ngModel)]="toggle_pay" checked="true"></ion-toggle>
+    </ion-item>
+<!-- 
+    <ion-item>
+      <ion-label>Sam</ion-label>
+      <ion-toggle color="energized"></ion-toggle>
+    </ion-item> -->
+  </ion-list>
+
+	<ion-list>
+		<ion-card padding *ngIf="toggle_pay">
+		  <!-- <ion-item> -->
+		    <ion-label color="#000">Monto</ion-label>
+		    <ion-input type="number" placeholder="valor.." [(ngModel)]="pay"></ion-input>
+		    <button ion-button color="secondary" full (tap)="addAmount()">Agregar</button>
+	  	<!-- </ion-item> -->
+	  </ion-card>
+		<ion-card *ngFor="let pay of month_obj.pay">
+			<ion-item *ngIf="pay.value !=0">
+				<h2> Abono :{{ pay.value }}</h2>
+				<p> Fecha :{{ pay.date | date}} a las {{ pay.date | date : 'mediumTime' }}</p>
+			</ion-item>
+		</ion-card>
+		<div *ngIf="month_obj.paid;else nopaid">
+			<ion-card padding class="back-green">
+				<h2 class="white">Pagado</h2>
+			</ion-card>
+		</div>
+		<ng-template #nopaid>
+			<ion-card padding class="back-red">
+				<span class="white">Sin pagar</span>
+			</ion-card>
+		</ng-template>
+		
+	</ion-list>
+</ion-content>

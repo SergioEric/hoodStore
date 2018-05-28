@@ -1,0 +1,5 @@
+<ion-content padding>
+  <ion-list>
+      <button ion-item *ngFor="let client of clients | async" (tap)="gotoCredit(client.key)"><span class="value_text">{{ client.name}} </span><ion-icon name="arrow-round-forward" item-end></ion-icon></button>
+  </ion-list>
+</ion-content>

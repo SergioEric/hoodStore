@@ -27,8 +27,6 @@ import { Toast } from '@ionic-native/toast';
 import { CallNumber } from '@ionic-native/call-number';
 
 import { AngularFirestoreModule } from 'angularfire2/firestore';
-import { FacadeServiceProvider } from '../providers/facade-service/facade-service';
-import { SingletonServiceProvider } from '../providers/singleton-service/singleton-service';
 
 const config = {
   apiKey: "AIzaSyBdTfPhNExNeNCOrcoJs2plOPqsZQ_OLrc",
@@ -84,9 +82,7 @@ const config = {
     Dialogs,
     Toast,
     CallNumber,
-    {provide: ErrorHandler, useClass: IonicErrorHandler},
-    FacadeServiceProvider,
-    SingletonServiceProvider
+    {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
 export class AppModule {}

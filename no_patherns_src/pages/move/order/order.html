@@ -1,0 +1,58 @@
+<!--
+  Generated template for the OrderPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Pedido</ion-title>
+    	<ion-buttons end>
+	      <button ion-button icon-only (tap)="switchViewOrder()">
+	        <ion-icon name="eye"></ion-icon>
+	        <p color="">Ver pedidos</p>
+	      </button>
+<!-- 	      <button ion-button icon-start class="btn-txt" (click)="viewMonths()">
+	        <ion-icon name="calendar"></ion-icon> 
+	      </button>
+ -->	    </ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+	<ion-list>
+
+	  <ion-item>
+	    <!-- <ion-label fixed>Nombre Prod.</ion-label> -->
+	    <!-- <ion-textarea type="text" placeholder="nombre productos y/o descripcion" [(ngModel)]="name_product"></ion-textarea> -->
+	    <ion-textarea #myInput id="myInput" rows="1" maxLength="500" (keyup)="resize()" [(ngModel)]="name_product" placeholder="nombre productos y/o descripcion" ></ion-textarea>
+	  </ion-item>
+
+	  <ion-item>
+	    <ion-label fixed>Valor</ion-label>
+	    <ion-input type="number" [(ngModel)]="amount"></ion-input>
+	  </ion-item>
+
+	  <ion-item>
+	    <ion-label fixed>Cantidad</ion-label>
+	    <ion-input type="number" [(ngModel)]="quantity"></ion-input>
+	  </ion-item>
+
+	</ion-list>
+	<div padding>
+	  <button ion-button block full (tap)="addOrder()">Registrar Pedido</button>
+	</div>
+	<ion-list>
+		<ion-card *ngFor="let item of items | async">
+			<ion-item *ngIf="viewOrders">
+				<h2> Producto :{{ item.name_product }}</h2>
+				<h2> Precio :{{ item.amount }}</h2>
+				<p> Cantidad :{{ item.quantity}}</p>
+				<p> Fecha :{{ item.date | date}} a las {{ item.date | date : 'mediumTime' }}</p>
+			</ion-item>
+		</ion-card>
+	</ion-list>
+</ion-content>

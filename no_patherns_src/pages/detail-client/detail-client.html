@@ -1,0 +1,29 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>detail-client</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+	<ion-card>
+  <ion-card-header>
+    {{ client_obj.name }}
+  </ion-card-header>
+
+  <ion-list>
+    <button ion-item (tap)="makeCall()">
+      <ion-icon name="call" item-start></ion-icon>
+      Numero : {{ client_obj.phone }}
+    </button>
+
+    <button ion-item>
+      <ion-icon name="locate" item-start></ion-icon>
+      Dir: {{ client_obj.address }}
+    </button>
+
+  </ion-list>
+</ion-card>
+</ion-content>

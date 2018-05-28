@@ -3,7 +3,7 @@
     <name>Cuaderno Virtual</name>
     <description>IONIC 4 and AngularFire2, uploading products with your camera</description>
     <author email="sericmorales@gmail.com" href="m.me/S3rgioEric">Sergio Eric</author>
-    <content original-src="index.html" src="http://192.168.1.6:8100" />
+    <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
