@@ -48,12 +48,16 @@ export class CreditPage {
     this.singleProvider.addCreditToCollection(this.amount)
 	}
   detailOfValue(key):void{
-    let one_credit = this.singleProvider.getSnapForOneCredit(key);
+    let one_credit = this.singleProvider.getCreditDocument(key);
     this.navCtrl.push(DetailCreditPage,{data:one_credit})
   }
   setThrough(key):void{
     this.dialogs.confirm("Seguro que quieres tachar este valor?","Jefe",['Confirmar', 'Cancelar']).then((index)=>{
-      if(index === 1) this.singleProvider.setThroughForOneCredit(key)
+      if(index === 1) {
+        this.singleProvider.setThroughForOneCredit(key).then((res)=>{
+          this.toast.show(res, '2000', 'center').subscribe();
+        })
+      }
     }).catch(error=>{
       console.log(error)
     })

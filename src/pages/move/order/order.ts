@@ -1,17 +1,12 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
+import { Toast } from '@ionic-native/toast';
 
-import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
+import { SingletonServiceProvider } from '../../../providers/singleton-service/singleton-service';
+
+import Order from '../../../providers/singleton-service/order.model';
 import { Observable } from 'rxjs/Observable'
 
-import * as moment from 'moment'
-
-interface Order {
-	amount: number ,
-	date: Date,
-	name_product:string ,
-	quantity: number
-}
 
 @Component({
   selector: 'page-order',
@@ -20,7 +15,7 @@ interface Order {
 export class OrderPage {
 	@ViewChild('myInput') myInput: ElementRef;
   viewOrders:boolean=false
-	order_list:AngularFirestoreCollection<Order>
+	// order_list:AngularFirestoreCollection<Order>
   items:Observable<Order[]>;
 
 	// order_list:string[]=[]
@@ -31,26 +26,13 @@ export class OrderPage {
 	month:string;
   constructor(
   	public navCtrl: NavController,
-  	public navParams: NavParams,
-  	private afs:AngularFirestore
+		public navParams: NavParams,
+		private toast: Toast,
+  	private singleProvider:SingletonServiceProvider,
   	) {
-	    this.month = moment().format("MMM Do YY").split(' ')[0]
-	  	this.order_list = afs.collection<Order>('order')
-      this.items = this.order_list.snapshotChanges().map(actions=>{
-        return actions.map(doc=>{
-          return {
-            key: doc.payload.doc.id, ...doc.payload.doc.data() as Order
-          }
-        })
-      })
+			this.items = this.singleProvider.getOrderCollection()
   }
-  // pushProductNameToList(){
-  // 	if(this.name_product.trim() == '') return;
-  // 	this.order_list.push(this.name_product)
-
-  // 	this.name_product = ''
-  // }
-   resize() {
+  resize() {
       let element = this.myInput['_elementRef'].nativeElement.getElementsByClassName("text-input")[0];
       let scrollHeight = element.scrollHeight;
       element.style.height = scrollHeight + 'px';
@@ -58,23 +40,21 @@ export class OrderPage {
   }
 
   addOrder():void{
-  	if(this.name_product.trim() == '' || this.amount == null || this.quantity == null) return;
-  	let id = this.afs.createId()
-  	let dt = new Date()
-  	this.order_list.add({
-  		// order_list:this.order_list,
+		if(this.name_product.trim() == '' || this.amount == null || this.quantity == null) return;
+		let dt = new Date()
+		this.singleProvider.addOrder({
 			amount:new Number(this.amount).valueOf(),
 			date:dt,
 			name_product:this.name_product,
 			quantity:new Number(this.quantity).valueOf(),
-  	}).then(()=>{
-  		alert(`order con id: ${id} agregada`)
-				this.amount = null;
-				this.name_product = '';
-				this.quantity = null;
-  	}).catch(error=>{
-  		alert(error)
-  	})
+		}).then(res=>{
+			this.toast.show(res, '2000', 'center').subscribe();
+			this.amount = null;
+			this.name_product = '';
+			this.quantity = null;
+		}).catch(error=>{
+			this.toast.show(error, '2000', 'center').subscribe();
+		})
   }
   switchViewOrder(){
     this.viewOrders = !this.viewOrders

@@ -6,6 +6,7 @@ import { Observable } from 'rxjs/Observable'
 
 import {Client, ClientID} from './client.model'
 import { CreditId, Credit } from './credit.model';
+import Order from './order.model';
 
 
 import * as moment from 'moment'
@@ -34,6 +35,11 @@ export class SingletonServiceProvider {
   client_id:string;
   month_param=[false,''];//si viene por parametro, el valor
   year;
+  /*
+    for order logic
+  */
+  order_collection:AngularFirestoreCollection<Order>
+  order_list:Observable<Order[]>;
 
   constructor(
     private afs:AngularFirestore,
@@ -48,6 +54,23 @@ export class SingletonServiceProvider {
       return actions.map(action => ({key: action.payload.doc.id, ...action.payload.doc.data() as Client}));
     })
     return this.clients_list;
+  }
+
+  addClientToCollection(client:Client):Promise<string>{
+    const id = this.afs.createId();
+
+    return new Promise((resolve,reject)=>{
+      this.client_collection.doc(id).set(client).then(()=>{
+        resolve('added')
+      }).catch(error=>{
+        reject(new Error(error))
+      })
+    }) 
+  }
+
+  getClientDocument(key:string):AngularFirestoreDocument<Client>{
+    let snap_client:AngularFirestoreDocument<Client> = this.afs.doc(`clients/${key}`)
+  	return snap_client;
   }
 
   getCreditsCollection(client_id:string,_month?:string){
@@ -89,7 +112,7 @@ export class SingletonServiceProvider {
         console.log(action.payload.doc.id);
         // this.renderChart()
         return {
-          key: action.payload.doc.id, ...action.payload.doc.data() as Item
+          key: action.payload.doc.id, ...action.payload.doc.data() as Credit
         }
       });
 
@@ -148,7 +171,7 @@ export class SingletonServiceProvider {
     })
   }
 
-  getSnapForOneCredit(key:string):AngularFirestoreDocument<Credit>{
+  getCreditDocument(key:string):AngularFirestoreDocument<Credit>{
     let ref:AngularFirestoreDocument<Credit>;
     if(this.month_param[0]){
         ref = this.afs.doc(`prices-${this.year}/${this.client_id}/${this.month_param[1]}/${key}`)
@@ -157,23 +180,29 @@ export class SingletonServiceProvider {
     }
     return ref;
   }
-  setThroughForOneCredit(key):void{
-    if(this.month_param[0]){//por navparam
-      this.afs.collection(`prices-${this.year}`).doc(this.client_id).collection(this.month_param[1].toString()).doc(key).update({through:true}).then(()=>{
-         //se agrego a la base de datos
-         this.toast.show(`Se ha tachado`, '2000', 'center').subscribe();
-     }).catch(error=>{
-         alert(error)
-     });
-    }else{
-      this.afs.collection(`prices-${this.year}`).doc(this.client_id).collection(this.month).doc(key).update({through:true}).then(()=>{
-         //se agrego a la base de datos
-         this.toast.show(`Se ha tachado`, '2000', 'center').subscribe();
+
+  setThroughForOneCredit(key):Promise<string>{
+    return new Promise((resolve,reject)=>{
+      if(this.month_param[0]){//por navparam
+        this.afs.collection(`prices-${this.year}`).doc(this.client_id).collection(this.month_param[1].toString()).doc(key).update({through:true}).then((something)=>{
+           //se agrego a la base de datos
+           debugger;
+           resolve('Se ha tachado')
        }).catch(error=>{
-           alert(error)
-     });
-   }
+          reject(error)
+       });
+      }else{
+        this.afs.collection(`prices-${this.year}`).doc(this.client_id).collection(this.month).doc(key).update({through:true}).then((something)=>{
+           //se agrego a la base de datos
+           debugger;
+           resolve('Se ha tachado')
+         }).catch(error=>{
+            reject(error)
+       });
+     }
+    })
   }
+
   getRefOfMonthState():Object{
     let doc;
     let ref;
@@ -188,6 +217,35 @@ export class SingletonServiceProvider {
       ref:ref,
       total:this.total
     };
+  }
+
+  getOrderCollection(){
+    this.order_collection = this.afs.collection<Order>('order')
+    this.order_list = this.order_collection.snapshotChanges().map(actions=>{
+      return actions.map(doc=>{
+        return {
+          key: doc.payload.doc.id, ...doc.payload.doc.data() as Order
+        }
+      })
+    })
+    return this.order_list;
+  }
+  
+  addOrder(obj:Order):Promise<string>{
+    let id = this.afs.createId()
+  	return new Promise((resolve,reject)=>{
+      this.order_collection.add({
+        // order_list:this.order_list,
+        amount:obj.amount,
+        date:obj.date,
+        name_product:obj.name_product,
+        quantity:obj.quantity
+      }).then(()=>{
+        resolve(`Pedido con id: ${id} agregada`)
+      }).catch(error=>{
+        reject(error.message)
+      })
+    })
   }
 }
 
